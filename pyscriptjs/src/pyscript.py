@@ -213,6 +213,14 @@ class Element:
     def add_class(self, classname):
         self.element.classList.add(classname)
 
+    @classmethod
+    def create_(cls, what, id_=None, classes=""):
+        element = document.createElement(what)
+        if id_:
+            element.id = id_
+        add_classes(element, classes)
+        return Element(id_, element)
+
 
 def add_classes(element, class_list):
     for klass in class_list.split(" "):

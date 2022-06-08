@@ -23,7 +23,6 @@ export class PyMarkdown extends BaseEvalElement {
 
         mainDiv.id = this.id;
         this.id = `${this.id}-container`;
-        console.log("We are doing this...")
         mainDiv.innerHTML = marked.parse(this.src)
         console.log(marked.parse(this.src))
         this.appendChild(mainDiv);
