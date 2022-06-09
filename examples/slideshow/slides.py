@@ -181,10 +181,7 @@ class ExtensionTemplate:
 
 class SlideShow(ExtensionTemplate):
     def __init__(self, parent):
-        console.log("INITIALIZING IT")
-
         self.parent = parent
-
         self.source = parent.getAttribute("src") or ""
 
         self._children = []
@@ -194,14 +191,7 @@ class SlideShow(ExtensionTemplate):
         loc = document.location
         self.base = loc.origin + loc.pathname + "#s%s"
         self.compute_index()
-        # try:
-        #     self.index = int(loc.hash.replace('#s', '') or 1)
-        # except:
-        #     self.index = 1
-
-        console.log("INDEX", self.index)
         self.register_events()
-        console.log("ALLDONE IT")
 
     def compute_index(self, *args, **kws):
         try:
@@ -230,87 +220,61 @@ class SlideShow(ExtensionTemplate):
     #         console.log("OH NO", len(self.slides), self.index)
 
     def register_events(self):
-        console.log("registering event")
-        # document.onkeypress = self.catch_event
         document.onkeydown = self.catch_arrow_event
 
         def loc_changed(*args, **kws):
-            console.log("location changed!")
             loc = document.location
             console.log(loc.hash)
 
-        console.log("connected locationchange...")
-        # window.addEventListener('locationchange', loc_changed)
         window.addEventListener("hashchange", create_proxy(self.compute_index))
-        console.log("connected locationchange...DONE!")
 
     def catch_arrow_event(self, evt, *args, **kws):
-        console.log(evt)
-        console.log(evt.keyCode)
-        console.log(evt.keyCode in {"37", "40", 37, 40})
         if evt.keyCode in {"37", "40", 37, 40}:
-            console.log("->")
             self.previous()
         if evt.keyCode in {"38", "39", 38, 39}:
-            console.log("<-")
             self.next()
 
     def catch_event(self, evt, *args, **kws):
-        console.log(evt)
         if evt.key in {"a", ","}:
-            console.log("->")
             self.previous()
         if evt.key in {"d", "."}:
-            console.log("<-")
             self.next()
 
     def next(self):
-        console.log("next", self.index)
         if self.index >= len(self.slides):
             self.index = 1
         else:
             self.index += 1
-        console.log("next-->", self.index)
+
         self.move_slide()
 
     def previous(self):
-        console.log("prev", self.index)
         if self.index < 2:
             self.index = len(self.slides)
         else:
             self.index -= 1
-        console.log("prev-->", self.index)
         self.move_slide()
 
     def move_slide(self):
-        console.log("move")
         url = self.base % self.index
         console.log(url)
         document.location.href = url
 
     def connect(self):
-        console.log("Connecting...")
         pyscript.run_until_complete(self.get_slides())
 
     def add_style(self, styles):
-        console.log("adding style...")
-        # console.log(styles)
         # Create style document
         css = document.createElement("style")
         css.type = "text/css"
-        console.log("TAGA")
         css.appendChild(document.createTextNode(styles))
-        console.log("TOGA")
+
         # Append style to the tag name
         document.getElementsByTagName("head")[0].appendChild(css)
-        console.log("DONE adding style...")
 
     async def get_slides(self):
-        console.log("GHEEET source", self.source)
         response = await pyfetch(self.source)
-        console.log("GOT RESP source", response)
         self._source = await response.string()
-        console.log("DOINE source", self._source)
 
         self.slides = slides_content = self._source.split("--- new ---")
         slides_headers = []
@@ -321,19 +285,15 @@ class SlideShow(ExtensionTemplate):
             "prev_next_visibility": [],
             "navi_btns": [],
         }
-        console.log("--- FOOOOR ---")
-        for i, content in enumerate(slides_content):
-            # cur_slide = i + 1
-            # percentage = i * -100
-            console.log("--- FAAAOOOR ---")
 
+        for i, content in enumerate(slides_content):
             cur_slide = i + 1
             perc = i * (-100)
 
             extra_css["slider_anim_pos"].append(
                 SLIDER_ANIM_POS_TEMPL % (cur_slide, perc, perc)
             )
-            console.log("--- FOOOOR ---")
+
             extra_css["prev_next_visibility"].append(
                 PREV_NEXT_VIS_TEMPL % (cur_slide, cur_slide)
             )
@@ -350,38 +310,26 @@ class SlideShow(ExtensionTemplate):
             else:
                 next = i + 2
             cleaned_content.append(content)
-            console.log("-------------")
 
             console.log(content)
             slides_navi.append(
                 f'<div><a href="#s{prev}"></a><a href="#s{next}"></a></div>'
             )
 
-        console.log("DONEO))))")
         for k, v in extra_css.items():
-            console.log("----->", k)
             extra_css[k] = "\n".join(v)
 
         print(extra_css)
-        console.log("------->JOO-----")
         new_css = CSS_TEMPLATE.format(**extra_css)
-        console.log("------->IIIOO-----")
         self.add_style(new_css)
 
-        console.log("JOO-----")
-        console.log(";;;".join(slides_headers))
-        console.log("J0000O-----")
         self.main_div = Element.create_("div", self._id + "-gal", "CSSgal")
         self.slides_wrap = Element.create_("div", self._id + "-wrap", "slider")
         self.slides_navi = Element.create_("div", self._id + "-navi", "prevNext")
         self.slides_navi.element.innerHTML = "\n".join(slides_navi)
         self.slides_wrap.element.innerHTML = "\n".join(cleaned_content)
 
-        console.log("Questing for ", f"#{self.main_div.id}")
         self.main_div.element.innerHTML = "\n".join(slides_headers)
         self.main_div.element.appendChild(self.slides_wrap.element)
         self.main_div.element.appendChild(self.slides_navi.element)
         self.parent.appendChild(self.main_div.element)
-
-
-console.log("done initializing slides")
