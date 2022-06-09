@@ -1,0 +1,158 @@
+<div style="background:#5b8;">
+  <h2 class="presenter-title">Welcome to this slideshow</h2>
+        <h3 class="presenter-title">PyScript Team</h3>
+  <h4 class="presenter-title">June 05 2022</h4>
+</div>
+
+--- new ---
+
+<div style="background:#85b;">
+    <py-md>
+      What is this about?
+      ===================
+
+      This is an example of a slideshow extension using PyScript, that allows users to:
+
+      * create new slides
+      * navigate the slides using the keyboard arrows
+      * support html based slides
+      * support markdown based slides
+      * support live PyScript slides that allows users to use pyscript tags inside the slides themselves
+
+    </py-md>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>Why?</h1>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>Well.... why not?</h1>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>You can add a REPL to slides!</h1>
+</div>
+
+--- new ---
+
+<div  style="background:#e59;">
+  <h1>Python has a cool mantra, try to import this ;)</h1>
+  <py-repl></py-repl>
+</div>
+
+--- new ---
+
+<div  style="background: white; color: black">
+  <h1>Now try to "import antigravity" ... and then "antigravity.fly()" in the new REPL</h1>
+  <py-repl auto-generate="true"></py-repl>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>Demo Time</h1>
+</div>
+
+--- new ---
+
+<div  style="background:#e59;">
+  <div class="flex mx-8">
+  <div class="w-1/2 mx-1">
+    <py-repl id="mlib-repl" auto-generate="true" std-out="mlib-output" std-err="mlib-output">
+
+import matplotlib.pyplot as plt
+import matplotlib.tri as tri
+import numpy as np
+
+# First create the x and y coordinates of the points.
+n_angles = 36
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+
+# Create the Triangulation; no triangles so Delaunay triangulation created.
+triang = tri.Triangulation(x, y)
+
+# Mask off unwanted triangles.
+triang.set_mask(np.hypot(x[triang.triangles].mean(axis=1),
+                        y[triang.triangles].mean(axis=1))
+                &lt; min_radius)
+
+fig1, ax1 = plt.subplots()
+ax1.set_aspect('equal')
+tpc = ax1.tripcolor(triang, z, shading='flat')
+fig1.colorbar(tpc)
+ax1.set_title('tripcolor of Delaunay triangulation, flat shading')
+
+fig1
+    </py-repl>
+    </div>
+    <div id="mlib-output" class="w-1/2 mx-1"></div>
+    </div>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>Demo of all Demos (this slideshow :) )</h1>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background: black; color: yellow;">
+  <h1>Vision</h1>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background: black; color: yellow;">
+  <h1>Programming For The 99%</h1>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background: black; color: yellow;">
+  <h1>Democratization & Literacy</h1>
+</div>
+
+--- new ---
+
+<div  style="background:#B5C266;">
+    <py-md>
+      PyScript: Programming for the 99%
+      =================================
+
+      * Kids' first introduction to programming. Install nothing. All you need is a text editor and a browser
+      * No reinvention: Existing edu materials on HTML, CSS, Python mostly work
+      * Focus on productivity & quality-of-life for "casual programmers"
+      * Easy to share & learn: everything is in the HTML
+      * Make the web a friendly, hackable place where anyone can make interesting things
+    </py-md>
+</div>
+
+--- new ---
+
+<div class="single-title" style="background:#e59;">
+  <h1>Minecraft Bicycles for the Mind</h1>
+</div>
+
+
+--- new ---
+<div class="single-title" style="background:#e59;">
+  <h1>THANK YOU</h1>
+</div>
