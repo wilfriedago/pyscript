@@ -307,7 +307,7 @@ class SlideShow(ExtensionTemplate):
 
     async def get_slides(self):
         console.log("GHEEET source", self.source)
-        response = await pyfetch("./slides.slides")
+        response = await pyfetch(self.source)
         console.log("GOT RESP source", response)
         self._source = await response.string()
         console.log("DOINE source", self._source)
